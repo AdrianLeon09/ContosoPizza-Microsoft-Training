@@ -1,0 +1,44 @@
+﻿@using BlazingPizza.Services
+
+<div class="sidebar">
+    @if (orderS.order.Pizzas.Any())
+    {
+        <div class="order-contents">
+            <h2>Your order</h2>
+
+            @foreach (var configuredPizza in orderS.order.Pizzas)
+            {
+                <div class="cart-item">
+                    <div class="title">@(configuredPizza.Size)" @configuredPizza.Special.Name</div>
+                    <div class="item-price">
+                        @configuredPizza.GetFormattedTotalPrice()
+                    </div>
+                    <a @onclick="@(() => orderS.RemoveConfiguredPizza(@configuredPizza))" class="delete-item">x</a>
+                </div> 
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-cart">Choose a pizza<br>to get started</div>
+    }
+
+    <div class="order-total @(orderS.order.Pizzas.Any() ? "" : "hidden")">
+        Total:
+        <span class="total-price">@orderS.order.GetFormattedTotalPrice()</span>
+        <a href="checkout" class="@(orderS.order.Pizzas.Count == 0 ? "btn btn-warning disabled" : "btn btn-warning")">
+            Order >
+        </a> 
+        
+    </div>
+    
+</div>
+
+@code {
+
+    [Parameter]
+    public OrderState orderS { get; set; }
+   
+
+
+}

@@ -1,4 +1,25 @@
 @page "/"
+@using BlazingPizza.Services
+
+@inject HttpClient HttpClient
+@inject NavigationManager Navigation
+
 
 <h1>Blazing Pizzas</h1>
+<p>Welcome to Blazing Pizzas! Order your favorite pizza online.</p>
+<p></p>
+<PizzasView SpecialsList="specials"></PizzasView>
+
+
+@code {
+
+	public List<PizzaSpecial> specials{ get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+	specials = await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>(Navigation.BaseUri + "api/pizzas/getpizzas");
+
+	}
+}
+
 		

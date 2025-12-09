@@ -1,0 +1,84 @@
+﻿@using BlazingPizza.Services
+@inject OrderState orderState
+ 
+
+<style>
+    .pizza-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .pizza-cards li {
+        width: calc(33.333% - 1rem);
+        min-width: 220px;
+        height: 220px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-end;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .pizza-info {
+        background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.25));
+        color: #fff;
+        padding: 0.75rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .title {
+        font-weight: 700;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .price {
+        font-weight: 600;
+        display: block;
+        margin-top: 0.5rem;
+    }
+
+   
+</style>
+
+    <ul class="pizza-cards">
+        @if (SpecialsList is not null)
+        {
+            @foreach (var special in SpecialsList)
+            {
+                <li @onclick="@(() => orderState.ShowConfiguredDialog(special))"
+                    style="background-image: url('@special.ImageUrl')">
+                    <div class="pizza-info">
+                        <span class="title">@special.Name</span>
+                        <p>@special.Description</p>
+                        <span class="price">Price: @special.BasePrice.ToString("C")</span>
+                    </div>
+                </li>
+            }
+        }   
+
+    @if (orderState.ShowingConfiguredDialog is true)
+    {
+        <ConfiguredPizzaDialog pizza="orderState.ConfiguringPizza"
+                               OnCancel="orderState.CancelConfiguredPizzaDialog"
+                               OnConfirm="orderState.ConfirmConfigurePizzaDialog" />               
+    }
+</ul>
+<OrderComponent orderS="orderState"/>
+
+
+@code {
+    [Parameter]
+    public List<PizzaSpecial> SpecialsList { get; set; }
+
+  
+}
+
